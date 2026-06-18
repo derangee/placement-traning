@@ -1,0 +1,18 @@
+const passport = require("passport");
+
+const authMiddleware = (req, res, next) => {
+  passport.authenticate("jwt", { session: false }, (err, user) => {
+    if (err || !user) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+
+    req.user = user;
+    req.userId = user._id.toString();
+
+    next();
+  })(req, res, next);
+};
+
+module.exports = authMiddleware;
